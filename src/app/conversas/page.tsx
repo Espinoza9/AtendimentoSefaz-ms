@@ -171,7 +171,7 @@ export default function ConversasPage() {
     const [messageInput, setMessageInput] = useState("");
 
     const filteredConversations = useMemo(() => {
-        return allConversations.filter(c =>
+        return allConversations.filter((c: any) =>
             c.contact.includes(searchQuery) ||
             c.protocol.includes(searchQuery) ||
             c.theme.toLowerCase().includes(searchQuery.toLowerCase())
