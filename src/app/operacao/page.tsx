@@ -9,8 +9,6 @@ import {
     XAxis,
     YAxis,
     CartesianGrid,
-    BarChart,
-    Bar,
     PieChart,
     Pie,
     Cell,
@@ -114,7 +112,7 @@ export default function OperacaoPage() {
                                 {['7 dias', '15 dias', '30 dias'].map(t => (
                                     <button
                                         key={t}
-                                        onClick={() => setTimeRange(t.split(' ')[0] as any)}
+                                        onClick={() => setTimeRange(t.split(' ')[0] as '7' | '15' | '30')}
                                         className={clsx(
                                             "px-2 py-1 text-[10px] font-bold rounded-md transition-all",
                                             timeRange === t.split(' ')[0] ? "bg-white dark:bg-slate-700 text-gray-900 dark:text-white shadow-sm" : "text-gray-500 hover:text-gray-900 dark:hover:text-slate-300"
@@ -226,7 +224,7 @@ export default function OperacaoPage() {
     );
 }
 
-function MetricCard({ title, value, trend, trendUp, data }: { title: string, value: string, trend: string, trendUp: boolean, data: any[] }) {
+function MetricCard({ title, value, trend, trendUp, data }: { title: string, value: string, trend: string, trendUp: boolean, data: { value: number }[] }) {
     return (
         <div className="bg-white dark:bg-[#121826] p-8 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 relative overflow-hidden">
             <h3 className="text-xs font-bold text-gray-500 dark:text-slate-500 mb-4 uppercase tracking-wide">{title}</h3>

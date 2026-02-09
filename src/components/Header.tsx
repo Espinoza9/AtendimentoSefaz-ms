@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { Moon, Sun, Calendar, ChevronDown, LayoutGrid, Star, MessageSquare, Database } from "lucide-react";
 import { clsx } from "clsx";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 const navItems = [
     { name: "Operação", href: "/operacao", icon: LayoutGrid },
@@ -22,9 +23,10 @@ export function Header() {
     // Initialize theme
     useEffect(() => {
         const savedTheme = localStorage.getItem("theme");
-        if (savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-            setIsDark(true);
+        const isDarkMode = savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        if (isDarkMode) {
             document.documentElement.classList.add("dark");
+            setIsDark(true);
         }
     }, []);
 
@@ -47,7 +49,7 @@ export function Header() {
             {/* LEFT: LOGO AREA */}
             <div className="flex items-center gap-5">
                 <div className="flex items-center gap-3">
-                    <img src="/logo-sefaz.png" alt="Logo SEFAZ" className="h-10 w-auto" />
+                    <Image src="/logo-sefaz.png" alt="Logo SEFAZ" width={40} height={40} className="h-10 w-auto" priority />
                     <h1 className="text-2xl font-black leading-none tracking-tight">SEFAZ MS</h1>
                 </div>
                 <div className="h-8 w-[1.5px] bg-white/30 mx-1" />
@@ -131,9 +133,11 @@ export function Header() {
                         <p className="text-[11px] text-white/60 mt-1">Administrador</p>
                     </div>
                     <div className="relative group cursor-pointer">
-                        <img
+                        <Image
                             src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150&auto=format&fit=crop"
                             alt="User"
+                            width={40}
+                            height={40}
                             className="w-10 h-10 rounded-xl border-2 border-white/20 shadow-md group-hover:border-white transition-all object-cover"
                         />
                         <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-[#1B4D89] rounded-full" />

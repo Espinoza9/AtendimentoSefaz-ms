@@ -16,7 +16,7 @@ import {
     Cell,
     LabelList,
 } from "recharts";
-import { TrendingUp, TrendingDown, Star, Search } from "lucide-react";
+import { TrendingUp, TrendingDown, Search } from "lucide-react";
 import { clsx } from "clsx";
 import { useState } from "react";
 
@@ -197,7 +197,11 @@ export default function AvaliacaoPage() {
                                             dataKey="value"
                                             position="top"
                                             offset={12}
-                                            formatter={(value: any) => value > 1000 ? (value / 1000).toFixed(3) : value}
+                                            formatter={(value: unknown) => {
+                                                const val = value as string | number;
+                                                if (typeof val === 'number' && val > 1000) return (val / 1000).toFixed(3);
+                                                return (val ?? '').toString();
+                                            }}
                                             style={{ fill: '#6B7280', fontSize: 12, fontWeight: 'bold' }}
                                         />
                                         {gradeDistribution.map((entry, index) => (
@@ -229,9 +233,23 @@ function SimpleMetricCard({ title, value, trend, trendUp, className }: { title: 
     );
 }
 
-function RankingCard({ title, items, titleColor, scoreBg, timeRange, setTimeRange }: any) {
+interface RankingItem {
+    name: string;
+    score: number;
+}
+
+interface RankingCardProps {
+    title: string;
+    items: RankingItem[];
+    titleColor: string;
+    scoreBg: string;
+    timeRange: '7' | '15' | '30';
+    setTimeRange: (val: '7' | '15' | '30') => void;
+}
+
+function RankingCard({ title, items, titleColor, scoreBg, timeRange, setTimeRange }: RankingCardProps) {
     const [searchTerm, setSearchTerm] = useState("");
-    const filteredItems = items.filter((item: any) =>
+    const filteredItems = items.filter((item: RankingItem) =>
         item.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -244,7 +262,7 @@ function RankingCard({ title, items, titleColor, scoreBg, timeRange, setTimeRang
                         {['7 dias', '15 dias', '30 dias'].map(t => (
                             <button
                                 key={t}
-                                onClick={() => setTimeRange(t.split(' ')[0] as any)}
+                                onClick={() => setTimeRange(t.split(' ')[0] as '7' | '15' | '30')}
                                 className={clsx(
                                     "px-2 py-0.5 text-[9px] font-bold rounded-md transition-all",
                                     timeRange === t.split(' ')[0] ? "bg-white dark:bg-slate-700 text-gray-900 dark:text-white shadow-sm" : "text-gray-400 hover:text-gray-600 dark:hover:text-slate-300"
@@ -269,7 +287,7 @@ function RankingCard({ title, items, titleColor, scoreBg, timeRange, setTimeRang
             </div>
             <div className="flex-1 overflow-hidden flex flex-col justify-between py-1">
                 {filteredItems.length > 0 ? (
-                    filteredItems.slice(0, 5).map((item: any, index: number) => (
+                    filteredItems.slice(0, 5).map((item: RankingItem, index: number) => (
                         <div key={index} className="flex items-center text-sm py-2">
                             <div className="flex items-center gap-3 flex-1 overflow-hidden">
                                 <span className="text-gray-700 dark:text-slate-300 font-bold truncate">{item.name}</span>

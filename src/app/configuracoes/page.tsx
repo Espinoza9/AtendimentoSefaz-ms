@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { Header } from "@/components/Header";
 import { Plus, X, Upload, Clock, FileText, Trash2, Edit2, ExternalLink, Eye, Download, Search } from "lucide-react";
+import Image from "next/image";
 import { clsx } from "clsx";
 
 interface DocumentItem {
@@ -653,9 +654,11 @@ export default function ConfiguracoesPage() {
                         <div className="p-8 flex flex-col items-center justify-center bg-white dark:bg-[#121826] min-h-[400px]">
                             {previewDoc.url && (previewDoc.type?.startsWith('image/') || /\.(png|jpe?g|gif|webp)$/i.test(previewDoc.name)) ? (
                                 <div className="w-full flex justify-center">
-                                    <img
+                                    <Image
                                         src={previewDoc.url}
                                         alt={previewDoc.name}
+                                        width={800}
+                                        height={500}
                                         className="max-w-full max-h-[500px] object-contain rounded-xl shadow-2xl border border-gray-100 animate-in zoom-in-95 duration-500"
                                     />
                                 </div>
@@ -666,7 +669,7 @@ export default function ConfiguracoesPage() {
                                     </div>
                                     <p className="text-gray-900 font-bold text-lg mb-2">Visualização Indisponível</p>
                                     <p className="text-gray-500 text-sm text-center max-w-xs leading-relaxed">
-                                        O arquivo <span className="text-blue-600 font-medium">"{previewDoc.name}"</span> foi carregado, mas este tipo de arquivo não suporta pré-visualização direta.
+                                        O arquivo <span className="text-blue-600 font-medium">&quot;{previewDoc.name}&quot;</span> foi carregado, mas este tipo de arquivo não suporta pré-visualização direta.
                                     </p>
                                 </>
                             )}

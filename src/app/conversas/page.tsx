@@ -21,7 +21,32 @@ import {
 import { clsx } from "clsx";
 import { useState, useMemo } from "react";
 
-const conversations = [
+interface Message {
+    id: number;
+    sender: "user" | "bot" | "system";
+    text: string;
+    time: string;
+    emotion?: string;
+    type?: string;
+}
+
+interface Conversation {
+    id: string;
+    sentiment: string;
+    sentimentColor: string;
+    sentimentBg: string;
+    status: string;
+    statusColor: string;
+    theme: string;
+    time: string;
+    contact: string;
+    rating: number | null;
+    protocol: string;
+    isOnline: boolean;
+    history: Message[];
+}
+
+const conversations: Conversation[] = [
     {
         id: "1",
         sentiment: "Crítico",
@@ -40,7 +65,7 @@ const conversations = [
             { id: 2, sender: "bot", text: "Oi! 👋 Sou a Dina, sua assistente virtual de atendimento da Sefaz MS. Vou verificar sua solicitação.", time: "12:03" },
             { id: 3, sender: "bot", text: "Sinto muito pelo inconveniente. O erro 502 geralmente é temporário. Você já tentou limpar o cache do seu navegador ou utilizar uma aba anônima?", time: "12:04" },
             { id: 4, sender: "user", text: "Já tentei de tudo! Preciso pagar isso hoje e o sistema de vocês não funciona. Quero falar com um atendimento humano agora!", time: "12:05", emotion: "irritated" },
-            { type: "system", text: "Usuário solicitou transbordo humano" }
+            { id: 5, sender: "system", text: "Usuário solicitou transbordo humano", time: "12:05" }
         ]
     },
     {
@@ -131,7 +156,7 @@ const conversations = [
             { id: 3, sender: "user", text: "Isso está me causando prejuízo! Tenho caminhões parados esperando nota!", time: "11:42", emotion: "irritated" },
             { id: 4, sender: "bot", text: "Entendo a urgência. Como contingência, você pode emitir em modo offline (NFC-e) ou utilizar o SCAN. Posso orientá-lo?", time: "11:43" },
             { id: 5, sender: "user", text: "Minha empresa não está habilitada para SCAN!", time: "11:44", emotion: "irritated" },
-            { type: "system", text: "Usuário solicitou transbordo humano" }
+            { id: 6, sender: "system", text: "Usuário solicitou transbordo humano", time: "11:44" }
         ]
     },
     { id: "10", sentiment: "Positivo", sentimentColor: "text-green-500", sentimentBg: "bg-green-50 dark:bg-green-500/10", status: "Fechado", statusColor: "text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10", theme: "Agendamento", time: "Hoje, 11:50", contact: "(67) 994**-7788", rating: 5, protocol: "990011", isOnline: false, history: [] },
@@ -166,12 +191,12 @@ export default function ConversasPage() {
     const [selectedConvId, setSelectedConvId] = useState<string | null>(null);
     const itemsPerPage = 6;
 
-    const [allConversations, setAllConversations] = useState<any>(conversations);
+    const [allConversations, setAllConversations] = useState<Conversation[]>(conversations);
     const [assumedConversations, setAssumedConversations] = useState<Set<string>>(new Set());
     const [messageInput, setMessageInput] = useState("");
 
     const filteredConversations = useMemo(() => {
-        return allConversations.filter((c: any) =>
+        return allConversations.filter((c: Conversation) =>
             c.contact.includes(searchQuery) ||
             c.protocol.includes(searchQuery) ||
             c.theme.toLowerCase().includes(searchQuery.toLowerCase())
@@ -185,7 +210,7 @@ export default function ConversasPage() {
     }, [filteredConversations, currentPage]);
 
     const selectedConv = useMemo(() => {
-        return allConversations.find((c: any) => c.id === selectedConvId) || null;
+        return allConversations.find((c: Conversation) => c.id === selectedConvId) || null;
     }, [selectedConvId, allConversations]);
 
     const handleAssumirConversa = () => {
@@ -195,7 +220,7 @@ export default function ConversasPage() {
         const initialMessage = `👤 **Atendimento humano iniciado**\nOlá! Meu nome é **${attendantName}** e, a partir de agora, sou eu quem continuará seu atendimento.\nPode me contar melhor o que está acontecendo?`;
 
         setAssumedConversations(prev => new Set(prev).add(selectedConvId));
-        setAllConversations((prev: any[]) => prev.map((conv: any) => {
+        setAllConversations((prev: Conversation[]) => prev.map((conv: Conversation) => {
             if (conv.id === selectedConvId) {
                 return {
                     ...conv,
@@ -218,7 +243,7 @@ export default function ConversasPage() {
         e.preventDefault();
         if (!messageInput.trim() || !selectedConvId) return;
 
-        setAllConversations((prev: any[]) => prev.map((conv: any) => {
+        setAllConversations((prev: Conversation[]) => prev.map((conv: Conversation) => {
             if (conv.id === selectedConvId) {
                 return {
                     ...conv,
@@ -383,7 +408,7 @@ export default function ConversasPage() {
                                 )) : (
                                     <tr>
                                         <td colSpan={8} className="px-6 py-20 text-center text-gray-500 dark:text-slate-500 font-medium">
-                                            Nenhuma conversa encontrada para "{searchQuery}"
+                                            Nenhuma conversa encontrada para &quot;{searchQuery}&quot;
                                         </td>
                                     </tr>
                                 )}
@@ -440,7 +465,7 @@ export default function ConversasPage() {
                             </div>
                             <div className="space-y-4">
 
-                                {selectedConv.history.length > 0 ? selectedConv.history.map((msg: any, idx: number) => {
+                                {selectedConv.history.length > 0 ? selectedConv.history.map((msg: Message, idx: number) => {
                                     if (msg.type === "system") {
                                         return (
                                             <div key={idx} className="flex justify-center my-6">
