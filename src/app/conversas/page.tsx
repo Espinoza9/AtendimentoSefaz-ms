@@ -360,7 +360,7 @@ export default function ConversasPage() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 dark:divide-white/5">
-                                {paginatedConversations.length > 0 ? paginatedConversations.map((conv: any) => (
+                                {paginatedConversations.length > 0 ? paginatedConversations.map((conv) => (
                                     <tr key={conv.id} className="hover:bg-gray-50/50 dark:hover:bg-white/[0.02] transition-colors group">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">

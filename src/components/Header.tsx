@@ -16,31 +16,35 @@ const navItems = [
 
 export function Header() {
     const pathname = usePathname();
-    const [isDark, setIsDark] = useState(false);
+
     const [isCalendarOpen, setIsCalendarOpen] = useState(false);
     const [selectedDate, setSelectedDate] = useState("Janeiro/26");
+    const [isDark, setIsDark] = useState(() => {
+        if (typeof window === "undefined") return false;
+
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme) return savedTheme === "dark";
+
+        return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    });
+
 
     // Initialize theme
     useEffect(() => {
-        const savedTheme = localStorage.getItem("theme");
-        const isDarkMode = savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
-        if (isDarkMode) {
-            document.documentElement.classList.add("dark");
-            setIsDark(true);
-        }
-    }, []);
-
-    const toggleTheme = () => {
-        const newTheme = !isDark;
-        setIsDark(newTheme);
-        if (newTheme) {
+        if (isDark) {
             document.documentElement.classList.add("dark");
             localStorage.setItem("theme", "dark");
         } else {
             document.documentElement.classList.remove("dark");
             localStorage.setItem("theme", "light");
         }
+    }, [isDark]);
+
+
+    const toggleTheme = () => {
+        setIsDark(prev => !prev);
     };
+
 
     const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
