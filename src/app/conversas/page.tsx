@@ -185,7 +185,7 @@ export default function ConversasPage() {
     }, [filteredConversations, currentPage]);
 
     const selectedConv = useMemo(() => {
-        return allConversations.find(c => c.id === selectedConvId) || null;
+        return allConversations.find((c: any) => c.id === selectedConvId) || null;
     }, [selectedConvId, allConversations]);
 
     const handleAssumirConversa = () => {
@@ -195,7 +195,7 @@ export default function ConversasPage() {
         const initialMessage = `👤 **Atendimento humano iniciado**\nOlá! Meu nome é **${attendantName}** e, a partir de agora, sou eu quem continuará seu atendimento.\nPode me contar melhor o que está acontecendo?`;
 
         setAssumedConversations(prev => new Set(prev).add(selectedConvId));
-        setAllConversations(prev => prev.map(conv => {
+        setAllConversations((prev: any[]) => prev.map((conv: any) => {
             if (conv.id === selectedConvId) {
                 return {
                     ...conv,
@@ -218,7 +218,7 @@ export default function ConversasPage() {
         e.preventDefault();
         if (!messageInput.trim() || !selectedConvId) return;
 
-        setAllConversations(prev => prev.map(conv => {
+        setAllConversations((prev: any[]) => prev.map((conv: any) => {
             if (conv.id === selectedConvId) {
                 return {
                     ...conv,
@@ -335,7 +335,7 @@ export default function ConversasPage() {
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 dark:divide-white/5">
-                                {paginatedConversations.length > 0 ? paginatedConversations.map((conv) => (
+                                {paginatedConversations.length > 0 ? paginatedConversations.map((conv: any) => (
                                     <tr key={conv.id} className="hover:bg-gray-50/50 dark:hover:bg-white/[0.02] transition-colors group">
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
