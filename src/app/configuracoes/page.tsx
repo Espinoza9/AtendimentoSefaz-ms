@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { Header } from "@/components/Header";
-import { Plus, X, Upload, Clock, FileText, Trash2, Edit2, ExternalLink, Eye, Download } from "lucide-react";
+import { Plus, X, Upload, Clock, FileText, Trash2, Edit2, ExternalLink, Eye, Download, Search } from "lucide-react";
 import { clsx } from "clsx";
 
 interface DocumentItem {
@@ -171,6 +171,7 @@ export default function ConfiguracoesPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingService, setEditingService] = useState<ServiceCard | null>(null);
     const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all'); // NEW
+    const [searchTerm, setSearchTerm] = useState(""); // NEW
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     // Form State
@@ -290,10 +291,11 @@ export default function ConfiguracoesPage() {
 
     // Filter Logic
     const filteredServices = services.filter(service => {
-        if (filterStatus === 'all') return true;
-        if (filterStatus === 'active') return service.active;
-        if (filterStatus === 'inactive') return !service.active;
-        return true;
+        const matchesStatus = filterStatus === 'all' ||
+            (filterStatus === 'active' ? service.active : !service.active);
+        const matchesSearch = service.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            service.description.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesStatus && matchesSearch;
     });
 
     const activeCount = services.filter(s => s.active).length;
@@ -311,40 +313,54 @@ export default function ConfiguracoesPage() {
                     </div>
                 </div>
 
-                <div className="flex justify-between items-center mb-6">
-                    <div className="flex bg-white dark:bg-[#121826] p-1 rounded-xl shadow-sm border border-gray-100 dark:border-white/5">
-                        <button
-                            onClick={() => setFilterStatus('all')}
-                            className={clsx("px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2", filterStatus === 'all' ? "bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400" : "text-gray-500 hover:text-gray-900 dark:hover:text-slate-300")}
-                        >
-                            Todas
-                            <span className={clsx("text-xs px-1.5 py-0.5 rounded-md", filterStatus === 'all' ? "bg-blue-100 dark:bg-blue-500/30" : "bg-gray-100 dark:bg-slate-800")}>
-                                {services.length}
-                            </span>
-                        </button>
-                        <button
-                            onClick={() => setFilterStatus('active')}
-                            className={clsx("px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2", filterStatus === 'active' ? "bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400" : "text-gray-500 hover:text-gray-900 dark:hover:text-slate-300")}
-                        >
-                            Ativas
-                            <span className={clsx("text-xs px-1.5 py-0.5 rounded-md", filterStatus === 'active' ? "bg-emerald-100 dark:bg-emerald-500/30" : "bg-gray-100 dark:bg-slate-800")}>
-                                {activeCount}
-                            </span>
-                        </button>
-                        <button
-                            onClick={() => setFilterStatus('inactive')}
-                            className={clsx("px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2", filterStatus === 'inactive' ? "bg-orange-50 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400" : "text-gray-500 hover:text-gray-900 dark:hover:text-slate-300")}
-                        >
-                            Inativas
-                            <span className={clsx("text-xs px-1.5 py-0.5 rounded-md", filterStatus === 'inactive' ? "bg-orange-100 dark:bg-orange-500/30" : "bg-gray-100 dark:bg-slate-800")}>
-                                {inactiveCount}
-                            </span>
-                        </button>
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div className="flex flex-wrap gap-4 items-center">
+                        <div className="flex bg-white dark:bg-[#121826] p-1 rounded-xl shadow-sm border border-gray-100 dark:border-white/5">
+                            <button
+                                onClick={() => setFilterStatus('all')}
+                                className={clsx("px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2", filterStatus === 'all' ? "bg-blue-50 dark:bg-blue-500/20 text-blue-600 dark:text-blue-400" : "text-gray-500 hover:text-gray-900 dark:hover:text-slate-300")}
+                            >
+                                Todas
+                                <span className={clsx("text-xs px-1.5 py-0.5 rounded-md", filterStatus === 'all' ? "bg-blue-100 dark:bg-blue-500/30" : "bg-gray-100 dark:bg-slate-800")}>
+                                    {services.length}
+                                </span>
+                            </button>
+                            <button
+                                onClick={() => setFilterStatus('active')}
+                                className={clsx("px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2", filterStatus === 'active' ? "bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400" : "text-gray-500 hover:text-gray-900 dark:hover:text-slate-300")}
+                            >
+                                Ativas
+                                <span className={clsx("text-xs px-1.5 py-0.5 rounded-md", filterStatus === 'active' ? "bg-emerald-100 dark:bg-emerald-500/30" : "bg-gray-100 dark:bg-slate-800")}>
+                                    {activeCount}
+                                </span>
+                            </button>
+                            <button
+                                onClick={() => setFilterStatus('inactive')}
+                                className={clsx("px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2", filterStatus === 'inactive' ? "bg-orange-50 dark:bg-orange-500/20 text-orange-600 dark:text-orange-400" : "text-gray-500 hover:text-gray-900 dark:hover:text-slate-300")}
+                            >
+                                Inativas
+                                <span className={clsx("text-xs px-1.5 py-0.5 rounded-md", filterStatus === 'inactive' ? "bg-orange-100 dark:bg-orange-500/30" : "bg-gray-100 dark:bg-slate-800")}>
+                                    {inactiveCount}
+                                </span>
+                            </button>
+                        </div>
+
+                        {/* SEARCH BAR */}
+                        <div className="relative min-w-[300px]">
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                            <input
+                                type="text"
+                                placeholder="Pesquisar cartas "
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full pl-10 pr-4 py-2.5 text-sm bg-white dark:bg-[#121826] border border-gray-100 dark:border-white/5 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 dark:text-slate-200 dark:placeholder:text-slate-600 transition-all"
+                            />
+                        </div>
                     </div>
 
                     <button
                         onClick={() => handleOpenModal()}
-                        className="flex items-center gap-2 bg-[#1B4D89] text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-all shadow-sm font-medium active:scale-95"
+                        className="flex items-center gap-2 bg-[#1B4D89] text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-all shadow-sm font-medium active:scale-95 whitespace-nowrap"
                     >
                         <Plus className="w-5 h-5" />
                         Adicionar Carta

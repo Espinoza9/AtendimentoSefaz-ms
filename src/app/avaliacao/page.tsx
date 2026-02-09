@@ -16,7 +16,7 @@ import {
     Cell,
     LabelList,
 } from "recharts";
-import { TrendingUp, TrendingDown, Star } from "lucide-react";
+import { TrendingUp, TrendingDown, Star, Search } from "lucide-react";
 import { clsx } from "clsx";
 import { useState } from "react";
 
@@ -230,37 +230,61 @@ function SimpleMetricCard({ title, value, trend, trendUp, className }: { title: 
 }
 
 function RankingCard({ title, items, titleColor, scoreBg, timeRange, setTimeRange }: any) {
+    const [searchTerm, setSearchTerm] = useState("");
+    const filteredItems = items.filter((item: any) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="bg-white dark:bg-[#121826] p-6 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex flex-col flex-1 min-h-0 h-full">
-            <div className="flex justify-between items-center mb-6 flex-shrink-0">
-                <h3 className={clsx("text-base font-bold font-sans", titleColor)}>{title}</h3>
-                <div className="flex bg-gray-50 dark:bg-slate-800 rounded-lg p-0.5 border border-gray-100 dark:border-white/5">
-                    {['7 dias', '15 dias', '30 dias'].map(t => (
-                        <button
-                            key={t}
-                            onClick={() => setTimeRange(t.split(' ')[0] as any)}
-                            className={clsx(
-                                "px-2 py-0.5 text-[9px] font-bold rounded-md transition-all",
-                                timeRange === t.split(' ')[0] ? "bg-white dark:bg-slate-700 text-gray-900 dark:text-white shadow-sm" : "text-gray-400 hover:text-gray-600 dark:hover:text-slate-300"
-                            )}
-                        >
-                            {t}
-                        </button>
-                    ))}
+            <div className="flex flex-col gap-4 mb-6 flex-shrink-0">
+                <div className="flex justify-between items-center">
+                    <h3 className={clsx("text-base font-bold font-sans", titleColor)}>{title}</h3>
+                    <div className="flex bg-gray-50 dark:bg-slate-800 rounded-lg p-0.5 border border-gray-100 dark:border-white/5">
+                        {['7 dias', '15 dias', '30 dias'].map(t => (
+                            <button
+                                key={t}
+                                onClick={() => setTimeRange(t.split(' ')[0] as any)}
+                                className={clsx(
+                                    "px-2 py-0.5 text-[9px] font-bold rounded-md transition-all",
+                                    timeRange === t.split(' ')[0] ? "bg-white dark:bg-slate-700 text-gray-900 dark:text-white shadow-sm" : "text-gray-400 hover:text-gray-600 dark:hover:text-slate-300"
+                                )}
+                            >
+                                {t}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+
+                <div className="relative">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
+                    <input
+                        type="text"
+                        placeholder="Pesquisar por título..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-9 pr-4 py-1.5 text-xs bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-white/5 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500/20 dark:text-slate-200"
+                    />
                 </div>
             </div>
-            <div className="flex-1 overflow-hidden flex flex-col justify-between py-2">
-                {items.map((item: any, index: number) => (
-                    <div key={index} className="flex items-center text-sm py-2">
-                        <div className="flex items-center gap-3 flex-1 overflow-hidden">
-                            <span className="text-gray-700 dark:text-slate-300 font-bold truncate">{item.name}</span>
-                            <div className="flex-1 border-b border-gray-100 dark:border-slate-800 mx-2 h-0 translate-y-[2px]" />
+            <div className="flex-1 overflow-hidden flex flex-col justify-between py-1">
+                {filteredItems.length > 0 ? (
+                    filteredItems.slice(0, 5).map((item: any, index: number) => (
+                        <div key={index} className="flex items-center text-sm py-2">
+                            <div className="flex items-center gap-3 flex-1 overflow-hidden">
+                                <span className="text-gray-700 dark:text-slate-300 font-bold truncate">{item.name}</span>
+                                <div className="flex-1 border-b border-gray-100 dark:border-slate-800 mx-2 h-0 translate-y-[2px]" />
+                            </div>
+                            <div className={clsx("px-3 py-1 rounded-md text-[10px] font-black min-w-[36px] text-center", scoreBg)}>
+                                {item.score.toFixed(1)}
+                            </div>
                         </div>
-                        <div className={clsx("px-3 py-1 rounded-md text-[10px] font-black min-w-[36px] text-center", scoreBg)}>
-                            {item.score.toFixed(1)}
-                        </div>
+                    ))
+                ) : (
+                    <div className="flex-1 flex items-center justify-center text-xs text-gray-400 font-bold italic">
+                        Nenhum serviço encontrado
                     </div>
-                ))}
+                )}
             </div>
         </div>
     );
