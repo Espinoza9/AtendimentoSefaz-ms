@@ -303,10 +303,10 @@ export default function ConfiguracoesPage() {
     const inactiveCount = services.filter(s => !s.active).length;
 
     return (
-        <div className="flex flex-col h-full bg-slate-50 dark:bg-[#080B14] transition-colors duration-300">
+        <div className="flex flex-col h-screen bg-slate-50 dark:bg-[#080B14] transition-colors duration-300 overflow-hidden">
             <Header />
 
-            <div className="p-8">
+            <div className="flex-1 p-8 overflow-y-auto">
                 <div className="flex justify-between items-center mb-8">
                     <div>
                         <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Base de Dados</h2>
@@ -598,8 +598,8 @@ export default function ConfiguracoesPage() {
                                     </div>
                                     <p className="text-sm font-bold text-gray-900 dark:text-slate-200">Clique para selecionar um arquivo ou arraste e solte</p>
                                     <p className="text-xs text-gray-400 dark:text-slate-500 mt-2 font-bold uppercase tracking-wider">Extensões permitidas</p>
-                                    <div className="flex gap-2 mt-2">
-                                        {['.csv', '.doc', '.docx', '.txt', '.pdf'].map(ext => (
+                                    <div className="flex flex-wrap gap-2 mt-2 justify-center">
+                                        {['.csv', '.doc', '.docx', '.txt', '.pdf', '.xlsx', '.xls', '.ppt', '.pptx', '.json', '.xml', '.zip', '.png', '.jpg', '.svg'].map(ext => (
                                             <span key={ext} className="bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded text-[10px] font-bold text-gray-500 dark:text-slate-400 uppercase">{ext}</span>
                                         ))}
                                     </div>
@@ -652,7 +652,7 @@ export default function ConfiguracoesPage() {
                         </div>
 
                         <div className="p-8 flex flex-col items-center justify-center bg-white dark:bg-[#121826] min-h-[400px]">
-                            {previewDoc.url && (previewDoc.type?.startsWith('image/') || /\.(png|jpe?g|gif|webp)$/i.test(previewDoc.name)) ? (
+                            {previewDoc.url && (previewDoc.type?.startsWith('image/') || /\.(png|jpe?g|gif|webp|svg|bmp|ico)$/i.test(previewDoc.name)) ? (
                                 <div className="w-full flex justify-center">
                                     <Image
                                         src={previewDoc.url}
@@ -660,6 +660,30 @@ export default function ConfiguracoesPage() {
                                         width={800}
                                         height={500}
                                         className="max-w-full max-h-[500px] object-contain rounded-xl shadow-2xl border border-gray-100 animate-in zoom-in-95 duration-500"
+                                    />
+                                </div>
+                            ) : previewDoc.url && (previewDoc.type === 'application/pdf' || /\.pdf$/i.test(previewDoc.name)) ? (
+                                <div className="w-full h-[500px] rounded-xl overflow-hidden border border-gray-200 dark:border-white/10 shadow-lg">
+                                    <iframe
+                                        src={previewDoc.url}
+                                        className="w-full h-full"
+                                        title={previewDoc.name}
+                                    />
+                                </div>
+                            ) : previewDoc.url && (previewDoc.type?.startsWith('text/') || /\.(txt|csv|json|xml|log|md)$/i.test(previewDoc.name)) ? (
+                                <div className="w-full h-[500px] rounded-xl overflow-auto border border-gray-200 dark:border-white/10 shadow-lg bg-gray-50 dark:bg-slate-900 p-6">
+                                    <iframe
+                                        src={previewDoc.url}
+                                        className="w-full h-full"
+                                        title={previewDoc.name}
+                                    />
+                                </div>
+                            ) : previewDoc.url && /\.(doc|docx|xls|xlsx|ppt|pptx)$/i.test(previewDoc.name) ? (
+                                <div className="w-full h-[500px] rounded-xl overflow-hidden border border-gray-200 dark:border-white/10 shadow-lg">
+                                    <iframe
+                                        src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(previewDoc.url)}`}
+                                        className="w-full h-full"
+                                        title={previewDoc.name}
                                     />
                                 </div>
                             ) : (
@@ -676,14 +700,21 @@ export default function ConfiguracoesPage() {
 
                             <div className="mt-10 flex gap-3 w-full justify-center">
                                 {previewDoc.url && (
-                                    <a
-                                        href={previewDoc.url}
-                                        download={previewDoc.name}
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const link = document.createElement('a');
+                                            link.href = previewDoc.url!;
+                                            link.download = previewDoc.name;
+                                            document.body.appendChild(link);
+                                            link.click();
+                                            document.body.removeChild(link);
+                                        }}
                                         className="flex items-center gap-2 px-6 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-bold text-sm hover:bg-gray-200 transition-all"
                                     >
                                         <Download className="w-4 h-4" />
                                         Baixar Arquivo
-                                    </a>
+                                    </button>
                                 )}
                                 <button
                                     onClick={() => setPreviewDoc(null)}

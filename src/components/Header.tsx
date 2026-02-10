@@ -52,12 +52,13 @@ export function Header() {
         <header className="h-16 bg-[#1B4D89] flex items-center justify-between px-6 sticky top-0 z-50 text-white shadow-lg">
             {/* LEFT: LOGO AREA */}
             <div className="flex items-center gap-5">
-                <div className="flex items-center gap-3">
-                    <Image src="/logo-sefaz.png" alt="Logo SEFAZ" width={40} height={40} className="h-10 w-auto" priority />
-                    <h1 className="text-2xl font-black leading-none tracking-tight">SEFAZ MS</h1>
-                </div>
-                <div className="h-8 w-[1.5px] bg-white/30 mx-1" />
-                <p className="text-lg text-white/90 font-medium tracking-wide">Gestão do Atendimento</p>
+                <Image
+                    src="/logo-sefaz.svg"
+                    alt="SEFAZ MS - Gestão do Atendimento"
+                    width={200}
+                    height={40}
+                    className="h-10 w-auto object-contain brightness-0 invert"
+                />
             </div>
 
             {/* CENTER: NAVIGATION */}

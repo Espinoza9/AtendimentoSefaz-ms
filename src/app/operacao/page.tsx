@@ -30,21 +30,21 @@ const volumeData = [
 ];
 
 const failuresData = [
-    { name: "IPVA", value: 305, color: "#111827" },
-    { name: "ICMS", value: 237, color: "#4B5563" },
-    { name: "NF-e", value: 209, color: "#6B7280" },
-    { name: "Certidões", value: 73, color: "#9CA3AF" },
-    { name: "CADIN", value: 54, color: "#D1D5DB" },
-    { name: "Outros", value: 21, color: "#E5E7EB" },
+    { name: "IPVA", value: 305, color: "#1e3a8a" }, // Blue 900
+    { name: "ICMS", value: 237, color: "#1d4ed8" }, // Blue 700
+    { name: "NF-e", value: 209, color: "#2563eb" }, // Blue 600
+    { name: "Certidões", value: 73, color: "#3b82f6" }, // Blue 500
+    { name: "CADIN", value: 54, color: "#60a5fa" }, // Blue 400
+    { name: "Outros", value: 21, color: "#93c5fd" }, // Blue 300
 ];
 
 const themesData = [
-    { name: "Atendimentos pela IA", value: 25, color: "#9CA3AF" }, // Medium Gray
-    { name: "Atendimentos pela IA", value: 15, color: "#6B7280" }, // Darker Gray
-    { name: "Atendimentos pela IA", value: 15, color: "#111827" }, // Black
-    { name: "Atendimentos pela IA", value: 15, color: "#D1D5DB" }, // Lighter Gray
-    { name: "Atendimentos pela IA", value: 15, color: "#E5E7EB" }, // Lightest Gray
-    { name: "Outros", value: 15, color: "#F3F4F6" },               // Very Light Gray
+    { name: "Atendimentos pela IA", value: 35, color: "#0f172a" }, // Slate 900 (escuro)
+    { name: "Consultas IPVA", value: 20, color: "#1e3a8a" }, // Blue 900
+    { name: "Dúvidas ICMS", value: 15, color: "#3b82f6" }, // Blue 500
+    { name: "Nota Fiscal", value: 12, color: "#60a5fa" }, // Blue 400
+    { name: "Certidões", value: 10, color: "#93c5fd" }, // Blue 300
+    { name: "Outros", value: 8, color: "#bfdbfe" },   // Blue 200
 ];
 
 const sparklineData1 = [
@@ -75,37 +75,41 @@ export default function OperacaoPage() {
                         title="Total de Atendimentos"
                         value="21.548"
                         trend="+12%"
-                        trendUp={true}
+                        variant="positive"
                         data={sparklineData1}
                     />
+
                     <MetricCard
                         title="Usuários Únicos"
                         value="8,500"
                         trend="+5%"
-                        trendUp={true}
+                        variant="positive"
                         data={sparklineData2}
                     />
+
                     <MetricCard
                         title="Tempo Médio de Resposta"
                         value="1m 45s"
-                        trend="-10%"
-                        trendUp={true} // Green because lower time is usually good
+                        trend="+10%"
+                        variant="positive" // ↓ tempo = bom
                         data={sparklineData3}
                     />
+
                     <MetricCard
                         title="Mensagens por Conversa"
                         value="6"
                         trend="-8%"
-                        trendUp={false}
+                        variant="negative"
                         data={sparklineData4}
                     />
+
                 </div>
 
                 {/* CHARTS ROW */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0 ">
 
                     {/* VOLUME DE ATENDIMENTOS - Takes up larger space if needed, or equal */}
-                    <div className="lg:col-span-1 bg-white dark:bg-[#121826] p-6 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex flex-col">
+                    <div className="lg:col-span-1 bg-white dark:bg-[#121826] p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex flex-col">
                         <div className="flex justify-between items-center mb-6">
                             <h3 className="text-sm font-bold text-gray-800 dark:text-slate-200">Volume de Atendimentos</h3>
                             <div className="flex bg-gray-100 dark:bg-slate-800 rounded-lg p-0.5">
@@ -128,12 +132,12 @@ export default function OperacaoPage() {
                                 <AreaChart data={volumeData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
                                     <defs>
                                         <linearGradient id="colorAi" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#9ca3af" stopOpacity={0.3} />
-                                            <stop offset="95%" stopColor="#9ca3af" stopOpacity={0} />
+                                            <stop offset="5%" stopColor="#0ea5e9" stopOpacity={0.3} />
+                                            <stop offset="95%" stopColor="#0ea5e9" stopOpacity={0} />
                                         </linearGradient>
                                         <linearGradient id="colorHuman" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#e5e7eb" stopOpacity={0.3} />
-                                            <stop offset="95%" stopColor="#e5e7eb" stopOpacity={0} />
+                                            <stop offset="5%" stopColor="#1e3a8a" stopOpacity={0.3} />
+                                            <stop offset="95%" stopColor="#1e3a8a" stopOpacity={0} />
                                         </linearGradient>
                                     </defs>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
@@ -143,8 +147,8 @@ export default function OperacaoPage() {
                                         contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                                         itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
                                     />
-                                    <Area type="monotone" dataKey="ai" name="Atendimentos pela IA" stackId="1" stroke="#6b7280" fill="url(#colorAi)" />
-                                    <Area type="monotone" dataKey="human" name="Transbordo para Humano" stackId="1" stroke="#d1d5db" fill="url(#colorHuman)" />
+                                    <Area type="monotone" dataKey="ai" name="Atendimentos pela IA" stackId="1" stroke="#0ea5e9" fill="url(#colorAi)" />
+                                    <Area type="monotone" dataKey="human" name="Transbordo para Humano" stackId="1" stroke="#1e3a8a" fill="url(#colorHuman)" />
                                     <Legend iconType="rect" wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
                                 </AreaChart>
                             </ResponsiveContainer>
@@ -153,26 +157,50 @@ export default function OperacaoPage() {
 
                     {/* FALHAS DE RESPOSTA */}
                     <div className="lg:col-span-1 bg-white dark:bg-[#121826] p-8 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex flex-col">
-                        <h3 className="text-xl font-bold text-gray-800 dark:text-slate-200 mb-8">Falhas de Resposta</h3>
-                        <div className="flex-1 w-full min-h-0 space-y-6 overflow-y-auto pr-2">
-                            {failuresData.map((item) => (
-                                <div key={item.name} className="flex flex-col gap-2">
-                                    <div className="flex justify-between text-sm font-bold text-gray-500 dark:text-slate-400">
-                                        <span>{item.name}</span>
-                                        <span className="text-gray-900 dark:text-slate-200">{item.value}</span>
+                        <div className="flex-1 w-full min-h-0 space-y-8 overflow-y-auto pr-2">
+                            {failuresData.map((item) => {
+                                const percentage = Math.round((item.value / 305) * 100)
+
+                                return (
+                                    <div key={item.name} className="space-y-2">
+                                        {/* Header */}
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-sm font-bold text-gray-700 dark:text-slate-300">
+                                                {item.name}
+                                            </span>
+
+                                            <div className="flex items-center gap-4 text-sm">
+                                                <span className="text-gray-400 font-medium">
+                                                    OCORRÊNCIAS:
+                                                </span>
+                                                <span className="text-gray-900 dark:text-white font-bold">
+                                                    {item.value}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        {/* Progress Bar */}
+                                        <div className="w-full h-3 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                            <div
+                                                className="h-full rounded-full transition-all duration-500"
+                                                style={{
+                                                    width: `${percentage}%`,
+                                                    background: "linear-gradient(90deg, #1e3a8a 0%, #0ea5e9 100%)"
+                                                }}
+                                            />
+                                        </div>
+
+                                        {/* Footer */}
+                                        <div className="flex justify-end">
+                                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">
+                                                {percentage}% de taxa
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="w-full bg-gray-50 dark:bg-slate-800 h-8 rounded-lg overflow-hidden">
-                                        <div
-                                            className="h-full rounded-lg transition-all duration-500"
-                                            style={{
-                                                width: `${(item.value / 305) * 100}%`,
-                                                backgroundColor: item.color
-                                            }}
-                                        />
-                                    </div>
-                                </div>
-                            ))}
+                                )
+                            })}
                         </div>
+
                     </div>
 
                     {/* TEMAS COM MAIOR VOLUME */}
@@ -211,7 +239,7 @@ export default function OperacaoPage() {
                                         <span className="text-gray-500 dark:text-slate-400 font-bold truncate">{item.name}</span>
                                         <div className="flex-1 border-b border-gray-200 dark:border-slate-700 border-solid mx-3 h-0 opacity-40 translate-y-[2px]" />
                                     </div>
-                                    <span className="font-bold text-gray-900 dark:text-slate-200 ml-2">35%</span>
+                                    <span className="font-bold text-gray-900 dark:text-slate-200 ml-2">{item.value}%</span>
                                 </div>
                             ))}
                         </div>
@@ -224,32 +252,80 @@ export default function OperacaoPage() {
     );
 }
 
-function MetricCard({ title, value, trend, trendUp, data }: { title: string, value: string, trend: string, trendUp: boolean, data: { value: number }[] }) {
+function MetricCard({
+    title,
+    value,
+    trend,
+    variant,
+    data
+}: {
+    title: string
+    value: string
+    trend: string
+    variant: "positive" | "negative"
+    data: { value: number }[]
+}) {
+    const isPositive = variant === "positive"
+
+    // ✅ ID seguro para SVG (SEM espaço, acento ou caractere inválido)
+    const gradientId = `metric-gradient-${title
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")}`
+
     return (
         <div className="bg-white dark:bg-[#121826] p-8 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 relative overflow-hidden">
-            <h3 className="text-xs font-bold text-gray-500 dark:text-slate-500 mb-4 uppercase tracking-wide">{title}</h3>
-            <div className="flex items-center gap-3 mb-6">
-                <span className="text-4xl font-bold text-gray-900 dark:text-slate-100 tracking-tight">{value}</span>
-                <div className={clsx("flex items-center text-xs font-bold px-2 py-1 rounded", trendUp ? "text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10" : "text-red-500 bg-red-50 dark:bg-red-500/10")}>
-                    {trendUp ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+            <h3 className="text-xs font-bold text-gray-500 dark:text-slate-500 mb-4 uppercase tracking-wide">
+                {title}
+            </h3>
+
+            <div className="flex items-center justify-between mb-6">
+                <span className="text-4xl font-bold text-gray-900 dark:text-slate-100">
+                    {value}
+                </span>
+
+                <div
+                    className={clsx(
+                        "flex items-center text-xs font-bold px-2 py-1 rounded",
+                        isPositive
+                            ? "text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10"
+                            : "text-red-500 bg-red-50 dark:bg-red-500/10"
+                    )}
+                >
+                    {isPositive ? (
+                        <ArrowUpRight className="w-4 h-4" />
+                    ) : (
+                        <ArrowDownRight className="w-4 h-4" />
+                    )}
                     {trend}
                 </div>
             </div>
+
             <div className="h-16 w-full absolute bottom-0 left-0 right-0 opacity-20">
                 <ResponsiveContainer width="100%" height="100%">
                     <AreaChart data={data}>
                         <defs>
-                            <linearGradient id={`grad-${title}`} x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stopColor="#000" stopOpacity={0.2} />
-                                <stop offset="100%" stopColor="#000" stopOpacity={0} />
+                            <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                                <stop
+                                    offset="0%"
+                                    stopColor={isPositive ? "#0bd188ff" : "#f87171"}
+                                    stopOpacity={0.2}
+                                />
+                                <stop
+                                    offset="100%"
+                                    stopColor={isPositive ? "#0bd188ff" : "#f87171"}
+                                    stopOpacity={0.2}
+                                />
                             </linearGradient>
                         </defs>
+
                         <Area
                             type="monotone"
                             dataKey="value"
-                            stroke="#333"
+                            stroke={isPositive ? "#10b981" : "#ef4444"}
                             strokeWidth={2}
-                            fill={`url(#grad-${title})`}
+                            fill={`url(#${gradientId})`}
                             isAnimationActive={false}
                         />
                     </AreaChart>
@@ -258,3 +334,5 @@ function MetricCard({ title, value, trend, trendUp, data }: { title: string, val
         </div>
     )
 }
+
+

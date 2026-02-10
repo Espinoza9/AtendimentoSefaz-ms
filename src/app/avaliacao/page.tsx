@@ -56,8 +56,8 @@ const attentionPoints = [
 ];
 
 const csatGaugeData = [
-    { value: 85, color: "#4B5563" },
-    { value: 15, color: "#E5E7EB" },
+    { value: 85, color: "#1e3a8a" },
+    { value: 15, color: "#bfdbfe" },
 ];
 
 export default function AvaliacaoPage() {
@@ -113,17 +113,17 @@ export default function AvaliacaoPage() {
                     {/* Top Charts Row */}
                     <div className="grid grid-cols-2 gap-4 flex-shrink-0">
                         {/* CSAT GLOBAL */}
-                        <div className="bg-white dark:bg-[#121826] p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex flex-col h-[240px]">
-                            <h3 className="text-xs font-bold text-gray-500 dark:text-slate-500 mb-2 font-sans text-center">CSAT Global</h3>
-                            <div className="flex-1 relative min-h-0">
+                        <div className="bg-white dark:bg-[#121826] p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex flex-col h-[260px]">
+                            <h3 className="text-xs font-bold text-gray-500 dark:text-slate-500 mb-4 font-sans text-center">CSAT Global</h3>
+                            <div className="flex-1 relative min-h-0 mt-2">
                                 <ResponsiveContainer width="100%" height="100%">
                                     <PieChart>
                                         <Pie
                                             data={csatGaugeData}
                                             cx="50%"
-                                            cy="85%"
-                                            innerRadius={60}
-                                            outerRadius={85}
+                                            cy="70%"
+                                            innerRadius={55}
+                                            outerRadius={80}
                                             startAngle={180}
                                             endAngle={0}
                                             paddingAngle={0}
@@ -136,7 +136,7 @@ export default function AvaliacaoPage() {
                                         </Pie>
                                     </PieChart>
                                 </ResponsiveContainer>
-                                <div className="absolute inset-0 flex flex-col items-center justify-center translate-y-6">
+                                <div className="absolute inset-0 flex flex-col items-center justify-end pb-4">
                                     <span className="text-3xl font-black text-gray-900 dark:text-white">85%</span>
                                     <div className="flex items-center text-[10px] text-emerald-500 font-bold mt-1">
                                         <TrendingUp className="w-3 h-3 mr-1" />
@@ -146,25 +146,35 @@ export default function AvaliacaoPage() {
                             </div>
                         </div>
                         {/* QUALIDADE */}
-                        <div className="bg-white dark:bg-[#121826] p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex flex-col h-[240px]">
+                        <div className="bg-white dark:bg-[#121826] p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex flex-col h-[260px]">
                             <h3 className="text-xs font-bold text-gray-500 dark:text-slate-500 mb-2 font-sans">Qualidade</h3>
                             <div className="flex-1 min-h-0">
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <AreaChart data={qualityData} margin={{ top: 10, right: 0, left: -20, bottom: 0 }}>
+                                    <AreaChart data={qualityData} margin={{ top: 10, right: 10, left: -20, bottom: 30 }}>
                                         <defs>
                                             <linearGradient id="colorDec" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#D1D5DB" stopOpacity={0.3} />
-                                                <stop offset="95%" stopColor="#D1D5DB" stopOpacity={0} />
+                                                <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.5} />
+                                                <stop offset="95%" stopColor="#60a5fa" stopOpacity={0.1} />
                                             </linearGradient>
                                             <linearGradient id="colorJan" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#9CA3AF" stopOpacity={0.3} />
-                                                <stop offset="95%" stopColor="#9CA3AF" stopOpacity={0} />
+                                                <stop offset="5%" stopColor="#1e3a8a" stopOpacity={0.5} />
+                                                <stop offset="95%" stopColor="#1e3a8a" stopOpacity={0.1} />
                                             </linearGradient>
                                         </defs>
-                                        <Area type="monotone" dataKey="dec" stroke="#D1D5DB" fill="url(#colorDec)" strokeWidth={3} />
-                                        <Area type="monotone" dataKey="jan" stroke="#9CA3AF" fill="url(#colorJan)" strokeWidth={3} />
+                                        <Area type="monotone" dataKey="dec" name="Dez/25" stroke="#60a5fa" fill="url(#colorDec)" strokeWidth={2} />
+                                        <Area type="monotone" dataKey="jan" name="Jan/26" stroke="#1e3a8a" fill="url(#colorJan)" strokeWidth={2} />
                                     </AreaChart>
                                 </ResponsiveContainer>
+                            </div>
+                            <div className="flex items-center justify-center gap-6 mt-2">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: '#60a5fa' }} />
+                                    <span className="text-[10px] text-gray-500 font-medium">Dez/25</span>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-3 h-3 rounded-sm" style={{ backgroundColor: '#1e3a8a' }} />
+                                    <span className="text-[10px] text-gray-500 font-medium">Jan/26</span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -205,7 +215,7 @@ export default function AvaliacaoPage() {
                                             style={{ fill: '#6B7280', fontSize: 12, fontWeight: 'bold' }}
                                         />
                                         {gradeDistribution.map((entry, index) => (
-                                            <Cell key={index} fill={index >= 3 ? "#9CA3AF" : "#4B5563"} />
+                                            <Cell key={index} fill={index >= 3 ? "#60a5fa" : "#1e3a8a"} />
                                         ))}
                                     </Bar>
                                 </BarChart>
@@ -248,46 +258,28 @@ interface RankingCardProps {
 }
 
 function RankingCard({ title, items, titleColor, scoreBg, timeRange, setTimeRange }: RankingCardProps) {
-    const [searchTerm, setSearchTerm] = useState("");
-    const filteredItems = items.filter((item: RankingItem) =>
-        item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
     return (
         <div className="bg-white dark:bg-[#121826] p-6 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex flex-col flex-1 min-h-0 h-full">
-            <div className="flex flex-col gap-4 mb-6 flex-shrink-0">
-                <div className="flex justify-between items-center">
-                    <h3 className={clsx("text-base font-bold font-sans", titleColor)}>{title}</h3>
-                    <div className="flex bg-gray-50 dark:bg-slate-800 rounded-lg p-0.5 border border-gray-100 dark:border-white/5">
-                        {['7 dias', '15 dias', '30 dias'].map(t => (
-                            <button
-                                key={t}
-                                onClick={() => setTimeRange(t.split(' ')[0] as '7' | '15' | '30')}
-                                className={clsx(
-                                    "px-2 py-0.5 text-[9px] font-bold rounded-md transition-all",
-                                    timeRange === t.split(' ')[0] ? "bg-white dark:bg-slate-700 text-gray-900 dark:text-white shadow-sm" : "text-gray-400 hover:text-gray-600 dark:hover:text-slate-300"
-                                )}
-                            >
-                                {t}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400" />
-                    <input
-                        type="text"
-                        placeholder="Pesquisar por título..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-9 pr-4 py-1.5 text-xs bg-gray-50 dark:bg-slate-800/50 border border-gray-100 dark:border-white/5 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500/20 dark:text-slate-200"
-                    />
+            <div className="flex justify-between items-center mb-6 flex-shrink-0">
+                <h3 className={clsx("text-base font-bold font-sans", titleColor)}>{title}</h3>
+                <div className="flex bg-gray-50 dark:bg-slate-800 rounded-lg p-0.5 border border-gray-100 dark:border-white/5">
+                    {['7 dias', '15 dias', '30 dias'].map(t => (
+                        <button
+                            key={t}
+                            onClick={() => setTimeRange(t.split(' ')[0] as '7' | '15' | '30')}
+                            className={clsx(
+                                "px-2 py-0.5 text-[9px] font-bold rounded-md transition-all",
+                                timeRange === t.split(' ')[0] ? "bg-white dark:bg-slate-700 text-gray-900 dark:text-white shadow-sm" : "text-gray-400 hover:text-gray-600 dark:hover:text-slate-300"
+                            )}
+                        >
+                            {t}
+                        </button>
+                    ))}
                 </div>
             </div>
             <div className="flex-1 overflow-hidden flex flex-col justify-between py-1">
-                {filteredItems.length > 0 ? (
-                    filteredItems.slice(0, 5).map((item: RankingItem, index: number) => (
+                {items.length > 0 ? (
+                    items.slice(0, 5).map((item: RankingItem, index: number) => (
                         <div key={index} className="flex items-center text-sm py-2">
                             <div className="flex items-center gap-3 flex-1 overflow-hidden">
                                 <span className="text-gray-700 dark:text-slate-300 font-bold truncate">{item.name}</span>
